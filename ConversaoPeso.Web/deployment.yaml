@@ -1,0 +1,38 @@
+# Deployment do web app
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webpeso
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webpeso
+  template:
+    metadata:
+      labels:
+        app: webpeso
+    spec:
+      containers:
+      - name: webpeso
+        image: flsanchesjr/conversao-peso:v1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80
+---
+# Service do web app
+apiVersion: v1
+kind: Service
+metadata:
+  name: webpeso
+spec:
+  selector:
+    app: webpeso
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30001
+  type: NodePort
